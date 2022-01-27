@@ -22,25 +22,25 @@ class ConfigurationManager(object):
         "MINIO_ENDPOINT": {
             "required": False,
             "default:": "http://127.0.0.1:9000",
-            "allowed_values": [],
+            "allowed_values": consts.ALL_VALUES_ALLOWED,
             "value": None
         },
         "S3_ACCESS_KEY": {
             "required": True,
             "default:": None,
-            "allowed_values": [],
+            "allowed_values": consts.ALL_VALUES_ALLOWED,
             "value": None
         },
         "S3_SECRET_KEY": {
             "required": True,
             "default:": None,
-            "allowed_values": [],
+            "allowed_values": consts.ALL_VALUES_ALLOWED,
             "value": None
         },
         "EXPOSER_ALLOWED_BUCKETS": {
             "required": False,
-            "default:": "all",
-            "allowed_values": [],
+            "default": consts.ALL_BUCKETS_ALLOWED,
+            "allowed_values": consts.ALL_VALUES_ALLOWED,
             "value": None
         },
         "EXPOSER_TYPE": {
@@ -76,13 +76,6 @@ class ConfigurationManager(object):
         return ConfigurationManager._conf[variable]["value"]
 
     @staticmethod
-    def _get_variable_list(variable):
-        if ConfigurationManager._conf[variable]["value"] is None:
-            list_str = ConfigurationManager._read_env_variable(variable)
-            ConfigurationManager._conf[variable]["value"] = list_str.replace(" ", "").split(",")
-        return ConfigurationManager._conf[variable]["value"]
-
-    @staticmethod
     def get_s3_provider():
         return ConfigurationManager._get_variable("S3_PROVIDER")
 
@@ -100,7 +93,12 @@ class ConfigurationManager(object):
 
     @staticmethod
     def get_exposer_allowed_buckets():
-        return ConfigurationManager._get_variable_list("EXPOSER_ALLOWED_BUCKETS")
+        value = ConfigurationManager._get_variable("EXPOSER_ALLOWED_BUCKETS")
+        if isinstance(value, list) or value == consts.ALL_BUCKETS_ALLOWED:
+            return value
+        else:
+            ConfigurationManager._conf["EXPOSER_ALLOWED_BUCKETS"]["value"] = value.replace(" ", "").split(",")
+            return ConfigurationManager._conf["EXPOSER_ALLOWED_BUCKETS"]["value"]
 
     @staticmethod
     def get_exposer_type():
