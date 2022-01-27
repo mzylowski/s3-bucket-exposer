@@ -1,31 +1,20 @@
+import helpers
 from flask import Flask
 
-from managers import consts
-from managers.configuration import ConfigurationManager as cm
-from providers import minio, aws
-
-app = Flask("s3-bucket-exposure")
-
-
-def call_provider():
-    provider = cm.get_s3_provider()
-    if provider == consts.MINIO_PROVIDER:
-        return minio.MinioProvider()
-    elif provider == consts.AWS_PROVIDER:
-        return aws.AWSProvider
-    else:
-        raise Exception(f"Unsupported S3 provider: {provider}")
+app = Flask("s3-bucket-exposer")
+provider = helpers.spawn_provider()
+exposer = helpers.spawn_exposer()
 
 
 @app.route("/")
 def index():
-    provider = call_provider()
-    return str(provider.list_of_buckets())
+    buckets = provider.list_of_buckets()
+    return exposer.expose_list_of_buckets(buckets)
 
 
 @app.route("/<bucket_name>")
 def file_list(bucket_name):
-    return "bucket_name"
+    return exposer.expose_list_of_buckets(provider.list_of_buckets())
 
 
 @app.route("/download/<bucket_name>/<file_name>")

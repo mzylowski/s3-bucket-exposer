@@ -37,6 +37,18 @@ class ConfigurationManager(object):
             "allowed_values": [],
             "value": None
         },
+        "EXPOSER_ALLOWED_BUCKETS": {
+            "required": False,
+            "default:": "all",
+            "allowed_values": [],
+            "value": None
+        },
+        "EXPOSER_TYPE": {
+            "required": False,
+            "default": "html",
+            "allowed_values": consts.SUPPORTED_EXPOSER_TYPES,
+            "value": None
+        },
     }
 
     @staticmethod
@@ -48,7 +60,7 @@ class ConfigurationManager(object):
                 if value not in ConfigurationManager._conf[variable_name]['allowed_values']:
                     raise ValueForConfigFieldNotAllowed(
                         f"Value {value} for variable {variable_name}"
-                        f" is not allowed. Choose from: f{ConfigurationManager._conf[variable_name]['allowed_values']}")
+                        f" is not allowed. Choose from: {ConfigurationManager._conf[variable_name]['allowed_values']}")
         except KeyError:
             if ConfigurationManager._conf[variable_name]['required']:
                 raise MissingRequiredConfigurationField(
@@ -61,6 +73,13 @@ class ConfigurationManager(object):
     def _get_variable(variable):
         if ConfigurationManager._conf[variable]["value"] is None:
             ConfigurationManager._conf[variable]["value"] = ConfigurationManager._read_env_variable(variable)
+        return ConfigurationManager._conf[variable]["value"]
+
+    @staticmethod
+    def _get_variable_list(variable):
+        if ConfigurationManager._conf[variable]["value"] is None:
+            list_str = ConfigurationManager._read_env_variable(variable)
+            ConfigurationManager._conf[variable]["value"] = list_str.replace(" ", "").split(",")
         return ConfigurationManager._conf[variable]["value"]
 
     @staticmethod
@@ -78,3 +97,11 @@ class ConfigurationManager(object):
     @staticmethod
     def get_s3_secret_key():
         return ConfigurationManager._get_variable("S3_SECRET_KEY")
+
+    @staticmethod
+    def get_exposer_allowed_buckets():
+        return ConfigurationManager._get_variable_list("EXPOSER_ALLOWED_BUCKETS")
+
+    @staticmethod
+    def get_exposer_type():
+        return ConfigurationManager._get_variable("EXPOSER_TYPE")
