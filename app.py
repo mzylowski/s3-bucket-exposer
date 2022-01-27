@@ -9,9 +9,9 @@ app = Flask("s3-bucket-exposure")
 
 def call_provider():
     provider = cm.get_s3_provider()
-    if provider is consts.MINIO_PROVIDER:
+    if provider == consts.MINIO_PROVIDER:
         return minio.MinioProvider()
-    elif provider is consts.AWS_PROVIDER:
+    elif provider == consts.AWS_PROVIDER:
         return aws.AWSProvider
     else:
         raise Exception(f"Unsupported S3 provider: {provider}")
@@ -20,7 +20,7 @@ def call_provider():
 @app.route("/")
 def index():
     provider = call_provider()
-    return provider.list_of_buckets()
+    return str(provider.list_of_buckets())
 
 
 @app.route("/<bucket_name>")
