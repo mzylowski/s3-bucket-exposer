@@ -1,5 +1,7 @@
 import os
 
+from managers import consts
+
 
 class MissingRequiredConfigurationField(Exception):
     pass
@@ -14,7 +16,7 @@ class ConfigurationManager(object):
         "S3_PROVIDER": {
             "required": True,
             "default:": None,
-            "allowed_values": ["minio", "aws"],
+            "allowed_values": consts.SUPPORTED_S3_PROVIDERS,
             "value": None
         }
     }
