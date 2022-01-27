@@ -8,8 +8,7 @@ exposer = helpers.spawn_exposer()
 
 @app.route("/")
 def index():
-    buckets = provider.list_of_buckets()
-    return exposer.expose_list_of_buckets(buckets)
+    return exposer.expose_list_of_buckets(provider.list_of_buckets())
 
 
 @app.route("/<bucket_name>")
