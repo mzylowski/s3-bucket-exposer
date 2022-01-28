@@ -94,11 +94,12 @@ class ConfigurationManager(object):
     @staticmethod
     def get_exposer_allowed_buckets():
         value = ConfigurationManager._get_variable("EXPOSER_ALLOWED_BUCKETS")
-        if isinstance(value, list) or value == consts.ALL_BUCKETS_ALLOWED:
+        if isinstance(value, list):
             return value
-        else:
-            ConfigurationManager._conf["EXPOSER_ALLOWED_BUCKETS"]["value"] = value.replace(" ", "").split(",")
-            return ConfigurationManager._conf["EXPOSER_ALLOWED_BUCKETS"]["value"]
+        if value == consts.ALL_BUCKETS_ALLOWED:
+            return value
+        ConfigurationManager._conf["EXPOSER_ALLOWED_BUCKETS"]["value"] = value.replace(" ", "").split(",")
+        return ConfigurationManager._conf["EXPOSER_ALLOWED_BUCKETS"]["value"]
 
     @staticmethod
     def get_exposer_type():
