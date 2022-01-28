@@ -24,4 +24,4 @@ def file_list(bucket_name):
 
 @app.route("/download/<bucket_name>/<file_name>")
 def download_file(bucket_name, file_name):
-    return "downloading file_name..."
+    return exposer.redirect(provider.generate_download_url(bucket_name, file_name))
