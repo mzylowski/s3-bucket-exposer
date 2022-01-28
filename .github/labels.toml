@@ -1,0 +1,119 @@
+["Component: CI/CD"]
+color = "c5def5"
+name = "Component: CI/CD"
+description = ""
+
+["Component: Configs"]
+color = "c5def5"
+name = "Component: Configs"
+description = ""
+
+["Component: Container image"]
+color = "c5def5"
+name = "Component: Container image"
+description = ""
+
+["Component: Core"]
+color = "c5def5"
+name = "Component: Core"
+description = ""
+
+["Component: Docs"]
+color = "c5def5"
+name = "Component: Docs"
+description = ""
+
+["Component: Exposers"]
+color = "c5def5"
+name = "Component: Exposers"
+description = ""
+
+["Component: Providers"]
+color = "c5def5"
+name = "Component: Providers"
+description = ""
+
+["Component: Tests"]
+color = "c5def5"
+name = "Component: Tests"
+description = ""
+
+[Duplicate]
+color = "cccccc"
+name = "Duplicate"
+description = ""
+
+["External Fix Needed"]
+color = "cc630e"
+name = "External Fix Needed"
+description = ""
+
+["Good first issue"]
+color = "ededed"
+name = "Good first issue"
+description = ""
+
+["Help wanted"]
+color = "159818"
+name = "Help wanted"
+description = ""
+
+["Priority: Critical"]
+color = "b60205"
+name = "Priority: Critical"
+description = "P0"
+
+["Priority: High"]
+color = "fad8c7"
+name = "Priority: High"
+description = "P1"
+
+["Priority: Low"]
+color = "bfe5bf"
+name = "Priority: Low"
+description = "P2"
+
+["Priority: Medium"]
+color = "fef2c0"
+name = "Priority: Medium"
+description = "P3"
+
+[Question]
+color = "ededed"
+name = "Question"
+description = ""
+
+["Type: Defect"]
+color = "eb6420"
+name = "Type: Defect"
+description = ""
+
+["Type: Enhancement"]
+color = "207de5"
+name = "Type: Enhancement"
+description = ""
+
+["Type: Invalid"]
+color = "e99695"
+name = "Type: Invalid"
+description = ""
+
+["Type: Needs clarify (unknown)"]
+color = "BD379D"
+name = "Type: Needs clarify (unknown)"
+description = ""
+
+["Type: Quality"]
+color = "5319e7"
+name = "Type: Quality"
+description = ""
+
+["Type: Security"]
+color = "ff0000"
+name = "Type: Security"
+description = ""
+
+["Won't fix"]
+color = "000000"
+name = "Won't fix"
+description = ""
