@@ -12,9 +12,10 @@ TODO
 cd s3-bucket-exposer
 python3 -m venv .venv
 source .venv/bin/activate
+cd s3-bucket-exposer #we going to python app directory
 pip3 install -r requirements.txt
 ```
-* Export required configuration variables (if You need minio instance :
+* Export required configuration variables (if You need minio instance TODO :
 ```
 export S3_PROVIDER=minio && export S3_ACCESS_KEY="SET_ME" && export S3_SECRET_KEY="SET_ME"
 ```
@@ -24,4 +25,4 @@ python3 -m flask run
 ```
 * From that point from different terminal or browser you can access exposer endpoints (see documentation (TODO: link))
 
-After every change of code flask have to be stopped by ctrl+C and restarted.
+After every change of code, flask have to be stopped by ctrl+C and restarted.
