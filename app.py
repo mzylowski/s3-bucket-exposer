@@ -15,7 +15,7 @@ def index():
     return exposer.expose_list_of_buckets(provider.list_of_buckets())
 
 
-@app.route("/<bucket_name>")
+@app.route("/bucket/<bucket_name>")
 def file_list(bucket_name):
     if type(exposer) == BaseExposer:
         return ""
