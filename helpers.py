@@ -1,7 +1,18 @@
+import logging
+
 from managers import consts
 from managers.configuration import ConfigurationManager as Cm
 from providers import minio, aws
 from exposers import html, json, base
+
+
+def initialize():
+    configure_logging()
+    return spawn_provider(), spawn_exposer()
+
+
+def configure_logging():
+    logging.getLogger().setLevel(Cm.get_log_level())
 
 
 def spawn_provider():

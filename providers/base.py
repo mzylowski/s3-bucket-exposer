@@ -1,3 +1,5 @@
+import logging
+
 from managers.configuration import consts, ConfigurationManager as Cm
 from objects.s3_object import S3Object
 
@@ -12,11 +14,13 @@ class BaseProvider(object):
         pass
 
     def list_of_buckets(self):
+        logging.info("Getting list of available buckets.")
         response = self.client.list_buckets()
         s3_buckets = [b["Name"] for b in response.get("Buckets", [])]
         return self._intersect_allowed_buckets(s3_buckets)
 
     def list_of_objects(self, bucket_name):
+        logging.info(f"Getting list of available objects in {bucket_name} bucket.")
         if not self.is_bucket_allowed(bucket_name):
             return None
         response = self.client.list_objects(Bucket=bucket_name).get("Contents", [])
@@ -24,9 +28,11 @@ class BaseProvider(object):
 
     def generate_download_url(self, bucket, key):
         if self.is_bucket_allowed(bucket):
+            logging.info(f"Generating download URL for {bucket}/{key}")
             return self.client.generate_presigned_url('get_object',
                                                       Params={'Bucket': bucket, 'Key': key},
                                                       ExpiresIn=15)
+        logging.info(f"Request for download URL for object in not existing bucket ({bucket}) is aborted.")
         return None
 
     def _intersect_allowed_buckets(self, s3_buckets):

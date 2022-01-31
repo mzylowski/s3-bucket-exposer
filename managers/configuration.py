@@ -1,3 +1,4 @@
+import logging
 import os
 
 from managers import consts
@@ -49,6 +50,12 @@ class ConfigurationManager(object):
             "allowed_values": consts.SUPPORTED_EXPOSER_TYPES,
             "value": None
         },
+        "EXPOSER_LOG_LEVEL": {
+            "required": False,
+            "default": "INFO",
+            "allowed_values": consts.LOG_LEVELS,
+            "value": None
+        }
     }
 
     @staticmethod
@@ -58,15 +65,20 @@ class ConfigurationManager(object):
             value = os.environ[variable_name]
             if ConfigurationManager._conf[variable_name]['allowed_values']:
                 if value not in ConfigurationManager._conf[variable_name]['allowed_values']:
+                    logging.error(f"Value {value} is not valid for field {variable_name}. Exiting...")
                     raise ValueForConfigFieldNotAllowed(
                         f"Value {value} for variable {variable_name}"
                         f" is not allowed. Choose from: {ConfigurationManager._conf[variable_name]['allowed_values']}")
         except KeyError:
             if ConfigurationManager._conf[variable_name]['required']:
+                logging.critical(f"Missing required variable {variable_name}. Exiting...")
                 raise MissingRequiredConfigurationField(
                     f"Variable {variable_name} needs to be configured.")
             if ConfigurationManager._conf[variable_name]['default']:
+                logging.info(f"Setting {variable_name} variable to default "
+                             f"value: {ConfigurationManager._conf[variable_name]['default']}")
                 value = ConfigurationManager._conf[variable_name]['default']
+        logging.debug(f"Variable {variable_name} configured with value: {value}")
         return value
 
     @staticmethod
@@ -104,3 +116,7 @@ class ConfigurationManager(object):
     @staticmethod
     def get_exposer_type():
         return ConfigurationManager._get_variable("EXPOSER_TYPE")
+
+    @staticmethod
+    def get_log_level():
+        return ConfigurationManager._get_variable("EXPOSER_LOG_LEVEL")

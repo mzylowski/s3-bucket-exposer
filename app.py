@@ -2,10 +2,10 @@ from flask import Flask
 
 import helpers
 from exposers.base import BaseExposer
+from managers.consts import APP_NAME
 
-app = Flask("s3-bucket-exposer")
-provider = helpers.spawn_provider()
-exposer = helpers.spawn_exposer()
+app = Flask(APP_NAME)
+provider, exposer = helpers.initialize()
 
 
 @app.route("/")
