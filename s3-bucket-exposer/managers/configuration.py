@@ -16,25 +16,25 @@ class ConfigurationManager(object):
     _conf = {
         "S3_PROVIDER": {
             "required": True,
-            "default:": None,
+            "default": None,
             "allowed_values": consts.SUPPORTED_S3_PROVIDERS,
             "value": None
         },
         "MINIO_ENDPOINT": {
             "required": False,
-            "default:": "http://127.0.0.1:9000",
+            "default": "http://127.0.0.1:9000",
             "allowed_values": consts.ALL_VALUES_ALLOWED,
             "value": None
         },
         "S3_ACCESS_KEY": {
             "required": True,
-            "default:": None,
+            "default": None,
             "allowed_values": consts.ALL_VALUES_ALLOWED,
             "value": None
         },
         "S3_SECRET_KEY": {
             "required": True,
-            "default:": None,
+            "default": None,
             "allowed_values": consts.ALL_VALUES_ALLOWED,
             "value": None
         },
