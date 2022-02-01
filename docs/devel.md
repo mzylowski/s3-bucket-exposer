@@ -4,10 +4,12 @@
 If you don't want to develop on your already configured s3 backend, we can configure local minio:
 ```
 docker run -d -p 9000:9000 -p 9001:9001 \
+    --ip 172.17.0.200 \
     -e "MINIO_ROOT_USER=admin" \
     -e "MINIO_ROOT_PASSWORD=password" \
     --name minio quay.io/minio/minio server /data --console-address ":9001"
 ```
+(If you already use 172.17.0.200, choose another IP or create new docker network).
 
 #### Clone and configure repository
 * Fork and clone the repository
@@ -21,7 +23,7 @@ pip3 install -r requirements.txt
 ```
 * Export required configuration variables (if configuring local minio use):
 ```
-export S3_PROVIDER=minio && export S3_ACCESS_KEY="admin" && export S3_SECRET_KEY="password"
+export S3_PROVIDER=minio && export S3_ACCESS_KEY="admin" && export S3_SECRET_KEY="password" && export MINIO_ENDPOINT="http://172.17.0.200:9000"
 ```
 * In the same terminal where exports are done start flask:
 ```

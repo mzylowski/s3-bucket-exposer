@@ -17,7 +17,7 @@ jobs:
       - name: Start minio container
         run: docker run -d -p 9000:9000 -p 9001:9001 -e "MINIO_ROOT_USER=admin" -e "MINIO_ROOT_PASSWORD=password" --name minio quay.io/minio/minio server /data --console-address ":9001"
       - name: Start s3-bucket-exposer candidate
-        run: docker run -d -p 80:80 --name s3-bucket-exposer -e S3_PROVIDER="minio" -e S3_ACCESS_KEY="admin" -e S3_SECRET_KEY="password" s3-bucket-exposer
+        run: export DEV_MINIO_ENDPOINT=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' minio)  && docker run --ip 172.17.0.100 -d -p 80:80 --name s3-bucket-exposer -e S3_PROVIDER="minio" -e S3_ACCESS_KEY="admin" -e S3_SECRET_KEY="password" -e MINIO_ENDPOINT="http://$DEV_MINIO_ENDPOINT:9000" s3-bucket-exposer
       - uses: webiny/action-post-run@2.0.1
         id: post-run-command
         with:
