@@ -52,7 +52,7 @@ class ConfigurationManager(object):
         },
         "EXPOSER_LOG_LEVEL": {
             "required": False,
-            "default": "INFO",
+            "default": "ERROR",
             "allowed_values": consts.LOG_LEVELS,
             "value": None
         }
