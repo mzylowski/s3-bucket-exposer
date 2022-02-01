@@ -1,0 +1,26 @@
+# https://github.com/py-actions/flake8
+
+name: Lint
+on: [push, pull_request]
+
+jobs:
+  flake8-lint:
+    runs-on: ubuntu-latest
+    name: Lint
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v2
+      - name: Set up Python environment
+        uses: actions/setup-python@v1
+        with:
+          python-version: "3.10"
+      - name: flake8 Lint s3-bucket-exposer
+        uses: py-actions/flake8@v2
+        with:
+          max-line-length: "120"
+          path: "s3-bucket-exposer"
+      - name: flake8 Lint tests
+        uses: py-actions/flake8@v2
+        with:
+          max-line-length: "120"
+          path: "tests"
