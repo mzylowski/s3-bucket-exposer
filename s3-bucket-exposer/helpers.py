@@ -12,7 +12,9 @@ def initialize():
 
 
 def configure_logging():
-    logging.getLogger().setLevel(Cm.get_log_level())
+    log_level = Cm.get_log_level()
+    if log_level is not consts.NO_EXPOSER_LOGGING:
+        logging.getLogger().setLevel(log_level)
 
 
 def spawn_provider():
