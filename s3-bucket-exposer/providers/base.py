@@ -1,14 +1,14 @@
 import logging
 
-from managers.configuration import consts, ConfigurationManager as Cm
+from configuration.config import consts, Configuration
 from objects.s3_object import S3Object
 
 
 class BaseProvider(object):
     def __init__(self):
         self.client = self.get_client()
-        self.all_buckets_allowed = lambda: Cm.get_exposer_allowed_buckets() == consts.ALL_BUCKETS_ALLOWED
-        self.is_bucket_allowed = lambda x: self.all_buckets_allowed or x in Cm.get_exposer_allowed_buckets()
+        self.all_buckets_allowed = lambda: Configuration.get_exposer_allowed_buckets() == consts.ALL_BUCKETS_ALLOWED
+        self.is_bucket_allowed = lambda x: self.all_buckets_allowed or x in Configuration.get_exposer_allowed_buckets()
 
     def get_client(self):
         pass
