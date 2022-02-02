@@ -110,7 +110,7 @@ class Configuration(object):
             return value
         if value == consts.ALL_BUCKETS_ALLOWED:
             return value
-        Configuration._conf["EXPOSER_ALLOWED_BUCKETS"]["value"] = value.replace(" ", "").split(",")
+        Configuration._conf["EXPOSER_ALLOWED_BUCKETS"]["value"] = list(filter(None, value.replace(" ", "").split(",")))
         return Configuration._conf["EXPOSER_ALLOWED_BUCKETS"]["value"]
 
     @staticmethod
