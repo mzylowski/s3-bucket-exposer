@@ -1,7 +1,7 @@
 import logging
 import os
 
-from managers import consts
+from configuration import consts
 
 
 class MissingRequiredConfigurationField(Exception):
@@ -12,7 +12,7 @@ class ValueForConfigFieldNotAllowed(Exception):
     pass
 
 
-class ConfigurationManager(object):
+class Configuration(object):
     _conf = {
         "S3_PROVIDER": {
             "required": True,
@@ -63,60 +63,60 @@ class ConfigurationManager(object):
         value = None
         try:
             value = os.environ[variable_name]
-            if ConfigurationManager._conf[variable_name]['allowed_values']:
-                if value not in ConfigurationManager._conf[variable_name]['allowed_values']:
+            if Configuration._conf[variable_name]['allowed_values']:
+                if value not in Configuration._conf[variable_name]['allowed_values']:
                     logging.error(f"Value {value} is not valid for field {variable_name}. Exiting...")
                     raise ValueForConfigFieldNotAllowed(
                         f"Value {value} for variable {variable_name}"
-                        f" is not allowed. Choose from: {ConfigurationManager._conf[variable_name]['allowed_values']}")
+                        f" is not allowed. Choose from: {Configuration._conf[variable_name]['allowed_values']}")
         except KeyError:
-            if ConfigurationManager._conf[variable_name]['required']:
+            if Configuration._conf[variable_name]['required']:
                 logging.critical(f"Missing required variable {variable_name}. Exiting...")
                 raise MissingRequiredConfigurationField(
                     f"Variable {variable_name} needs to be configured.")
-            if ConfigurationManager._conf[variable_name]['default']:
+            if Configuration._conf[variable_name]['default']:
                 logging.info(f"Setting {variable_name} variable to default "
-                             f"value: {ConfigurationManager._conf[variable_name]['default']}")
-                value = ConfigurationManager._conf[variable_name]['default']
+                             f"value: {Configuration._conf[variable_name]['default']}")
+                value = Configuration._conf[variable_name]['default']
         logging.debug(f"Variable {variable_name} configured with value: {value}")
         return value
 
     @staticmethod
     def _get_variable(variable):
-        if ConfigurationManager._conf[variable]["value"] is None:
-            ConfigurationManager._conf[variable]["value"] = ConfigurationManager._read_env_variable(variable)
-        return ConfigurationManager._conf[variable]["value"]
+        if Configuration._conf[variable]["value"] is None:
+            Configuration._conf[variable]["value"] = Configuration._read_env_variable(variable)
+        return Configuration._conf[variable]["value"]
 
     @staticmethod
     def get_s3_provider():
-        return ConfigurationManager._get_variable("S3_PROVIDER")
+        return Configuration._get_variable("S3_PROVIDER")
 
     @staticmethod
     def get_minio_endpoint():
-        return ConfigurationManager._get_variable("MINIO_ENDPOINT")
+        return Configuration._get_variable("MINIO_ENDPOINT")
 
     @staticmethod
     def get_s3_access_key():
-        return ConfigurationManager._get_variable("S3_ACCESS_KEY")
+        return Configuration._get_variable("S3_ACCESS_KEY")
 
     @staticmethod
     def get_s3_secret_key():
-        return ConfigurationManager._get_variable("S3_SECRET_KEY")
+        return Configuration._get_variable("S3_SECRET_KEY")
 
     @staticmethod
     def get_exposer_allowed_buckets():
-        value = ConfigurationManager._get_variable("EXPOSER_ALLOWED_BUCKETS")
+        value = Configuration._get_variable("EXPOSER_ALLOWED_BUCKETS")
         if isinstance(value, list):
             return value
         if value == consts.ALL_BUCKETS_ALLOWED:
             return value
-        ConfigurationManager._conf["EXPOSER_ALLOWED_BUCKETS"]["value"] = value.replace(" ", "").split(",")
-        return ConfigurationManager._conf["EXPOSER_ALLOWED_BUCKETS"]["value"]
+        Configuration._conf["EXPOSER_ALLOWED_BUCKETS"]["value"] = value.replace(" ", "").split(",")
+        return Configuration._conf["EXPOSER_ALLOWED_BUCKETS"]["value"]
 
     @staticmethod
     def get_exposer_type():
-        return ConfigurationManager._get_variable("EXPOSER_TYPE")
+        return Configuration._get_variable("EXPOSER_TYPE")
 
     @staticmethod
     def get_log_level():
-        return ConfigurationManager._get_variable("EXPOSER_LOG_LEVEL")
+        return Configuration._get_variable("EXPOSER_LOG_LEVEL")

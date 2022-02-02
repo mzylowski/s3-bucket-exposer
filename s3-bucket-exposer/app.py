@@ -2,7 +2,7 @@ from flask import Flask
 
 import helpers
 from exposers.base import BaseExposer
-from managers.consts import APP_NAME
+from configuration.consts import APP_NAME
 
 application = Flask(APP_NAME)
 provider, exposer = helpers.initialize()
