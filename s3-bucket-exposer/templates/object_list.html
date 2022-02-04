@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}List of objects in {{ bucket }} bucket{% endblock %}
+{% block content %}
+  <h2>List of objects in {{ bucket }} bucket</h2>
+    <div>
+    <a href="/"><<</a>
+    <table>
+    {% for object in objects %}
+        <tr>
+        <td>{{ object.get_size() }}</td> <td>{{ object.get_date() }}</td><td><a href="/download/{{ bucket }}/{{ object.name }}">{{ object.name }}</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+    </div>
+{% endblock %}
