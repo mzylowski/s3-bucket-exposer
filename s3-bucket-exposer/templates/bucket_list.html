@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block title %}List of buckets{% endblock %}
+{% block content %}
+  <h2>List of buckets</h2>
+    <div>
+    {% for bucket in buckets %}
+        <li><a href="/bucket/{{ bucket }}">{{ bucket }} >></a></li>
+    {% endfor %}
+    </div>
+{% endblock %}
