@@ -110,7 +110,9 @@ class Configuration(object):
             return value
         if value == consts.ALL_BUCKETS_ALLOWED:
             return value
-        Configuration._conf["EXPOSER_ALLOWED_BUCKETS"]["value"] = list(filter(None, value.replace(" ", "").split(",")))
+        allowed_buckets = list(filter(None, value.replace(" ", "").split(",")))
+        logging.info(f"Configured allowed buckets are: {','.join(allowed_buckets)}")
+        Configuration._conf["EXPOSER_ALLOWED_BUCKETS"]["value"] = allowed_buckets
         return Configuration._conf["EXPOSER_ALLOWED_BUCKETS"]["value"]
 
     @staticmethod
