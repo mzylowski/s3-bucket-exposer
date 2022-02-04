@@ -1,14 +1,14 @@
 import logging
 
-from configuration.config import consts, Configuration
+from configuration.config import consts, Configuration as Config
 from objects.s3_object import S3Object
 
 
 class BaseProvider(object):
     def __init__(self):
         self.client = self.get_client()
-        self.all_buckets_allowed = lambda: Configuration.get_exposer_allowed_buckets() == consts.ALL_BUCKETS_ALLOWED
-        self.is_bucket_allowed = lambda x: self.all_buckets_allowed or x in Configuration.get_exposer_allowed_buckets()
+        self.all_buckets_allowed = lambda: Config.get_exposer_allowed_buckets() == consts.ALL_BUCKETS_ALLOWED
+        self.is_bucket_allowed = lambda x: self.all_buckets_allowed() or x in Config.get_exposer_allowed_buckets()
 
     def get_client(self):
         pass
@@ -36,4 +36,4 @@ class BaseProvider(object):
         return None
 
     def _intersect_allowed_buckets(self, s3_buckets):
-        return s3_buckets if self.all_buckets_allowed else [b for b in s3_buckets if self.is_bucket_allowed(b)]
+        return s3_buckets if self.all_buckets_allowed() else [b for b in s3_buckets if self.is_bucket_allowed(b)]
