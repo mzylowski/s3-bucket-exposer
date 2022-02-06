@@ -24,7 +24,8 @@ class BaseProvider(object):
         if not self.is_bucket_allowed(bucket_name):
             return None
         response = self.client.list_objects(Bucket=bucket_name).get("Contents", [])
-        return [S3Object(name=obj['Key'], date=obj['LastModified'], size=obj['Size']) for obj in response]
+        return [S3Object(name=obj['Key'], date=obj['LastModified'], size=obj['Size'])
+                for obj in response if float(obj['Size']) != 0]
 
     def generate_download_url(self, bucket, key):
         if self.is_bucket_allowed(bucket):
