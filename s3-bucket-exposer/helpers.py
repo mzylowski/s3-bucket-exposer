@@ -40,7 +40,7 @@ def spawn_provider():
     if provider == consts.MINIO_PROVIDER:
         return minio.MinioProvider()
     elif provider == consts.AWS_PROVIDER:
-        return aws.AWSProvider
+        return aws.AWSProvider()
     else:
         raise Exception(f"Unsupported S3 provider: {provider}")
 
