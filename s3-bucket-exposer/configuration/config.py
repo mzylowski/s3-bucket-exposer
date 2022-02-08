@@ -12,45 +12,56 @@ class ValueForConfigFieldNotAllowed(Exception):
     pass
 
 
+class ConfigFieldNotExist(Exception):
+    pass
+
+
 class Configuration(object):
     _conf = {
-        "S3_PROVIDER": {
+        consts.S3_PROVIDER: {
+            "restricted": False,
             "required": True,
             "default": None,
             "allowed_values": consts.SUPPORTED_S3_PROVIDERS,
             "value": None
         },
-        "MINIO_ENDPOINT": {
+        consts.MINIO_ENDPOINT: {
+            "restricted": False,
             "required": False,
             "default": "http://127.0.0.1:9000",
             "allowed_values": consts.ALL_VALUES_ALLOWED,
             "value": None
         },
-        "S3_ACCESS_KEY": {
+        consts.S3_ACCESS_KEY: {
+            "restricted": True,
             "required": True,
             "default": None,
             "allowed_values": consts.ALL_VALUES_ALLOWED,
             "value": None
         },
-        "S3_SECRET_KEY": {
+        consts.S3_SECRET_KEY: {
+            "restricted": True,
             "required": True,
             "default": None,
             "allowed_values": consts.ALL_VALUES_ALLOWED,
             "value": None
         },
-        "EXPOSER_ALLOWED_BUCKETS": {
+        consts.EXPOSER_ALLOWED_BUCKETS: {
+            "restricted": False,
             "required": False,
             "default": consts.ALL_BUCKETS_ALLOWED,
             "allowed_values": consts.ALL_VALUES_ALLOWED,
             "value": None
         },
-        "EXPOSER_TYPE": {
+        consts.EXPOSER_TYPE: {
+            "restricted": False,
             "required": False,
             "default": "html",
             "allowed_values": consts.SUPPORTED_EXPOSER_TYPES,
             "value": None
         },
-        "EXPOSER_LOG_LEVEL": {
+        consts.EXPOSER_LOG_LEVEL: {
+            "restricted": False,
             "required": False,
             "default": "ERROR",
             "allowed_values": consts.LOG_LEVELS,
@@ -78,34 +89,45 @@ class Configuration(object):
                 logging.info(f"Setting {variable_name} variable to default "
                              f"value: {Configuration._conf[variable_name]['default']}")
                 value = Configuration._conf[variable_name]['default']
-        logging.debug(f"Variable {variable_name} configured with value: {value}")
         return value
 
     @staticmethod
     def _get_variable(variable):
-        if Configuration._conf[variable]["value"] is None:
-            Configuration._conf[variable]["value"] = Configuration._read_env_variable(variable)
-        return Configuration._conf[variable]["value"]
+        try:
+            if Configuration._conf[variable]["value"] is None:
+                Configuration._conf[variable]["value"] = Configuration._read_env_variable(variable)
+                logging.debug(f"Variable {variable} configured with value: {Configuration.print_variable(variable)}")
+            return Configuration._conf[variable]["value"]
+        except KeyError:
+            raise ConfigFieldNotExist(f"Variable {variable} is not defined in config.py. This is probably a bug caused"
+                                      f"by calling not existing variable from other place in the code.")
+
+    @staticmethod
+    def print_variable(variable_name):
+        value = Configuration._get_variable(variable_name)
+        if Configuration._conf[variable_name]['restricted']:
+            return consts.SECRET
+        return value
 
     @staticmethod
     def get_s3_provider():
-        return Configuration._get_variable("S3_PROVIDER")
+        return Configuration._get_variable(consts.S3_PROVIDER)
 
     @staticmethod
     def get_minio_endpoint():
-        return Configuration._get_variable("MINIO_ENDPOINT")
+        return Configuration._get_variable(consts.MINIO_ENDPOINT)
 
     @staticmethod
     def get_s3_access_key():
-        return Configuration._get_variable("S3_ACCESS_KEY")
+        return Configuration._get_variable(consts.S3_ACCESS_KEY)
 
     @staticmethod
     def get_s3_secret_key():
-        return Configuration._get_variable("S3_SECRET_KEY")
+        return Configuration._get_variable(consts.S3_SECRET_KEY)
 
     @staticmethod
     def get_exposer_allowed_buckets():
-        value = Configuration._get_variable("EXPOSER_ALLOWED_BUCKETS")
+        value = Configuration._get_variable(consts.EXPOSER_ALLOWED_BUCKETS)
         if isinstance(value, list):
             return value
         if value == consts.ALL_BUCKETS_ALLOWED:
@@ -117,8 +139,8 @@ class Configuration(object):
 
     @staticmethod
     def get_exposer_type():
-        return Configuration._get_variable("EXPOSER_TYPE")
+        return Configuration._get_variable(consts.EXPOSER_TYPE)
 
     @staticmethod
     def get_log_level():
-        return Configuration._get_variable("EXPOSER_LOG_LEVEL")
+        return Configuration._get_variable(consts.EXPOSER_LOG_LEVEL)
