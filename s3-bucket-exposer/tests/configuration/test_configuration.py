@@ -1,7 +1,8 @@
 import os
 from unittest import TestCase, mock
 
-from configuration.config import Configuration, ValueForConfigFieldNotAllowed, MissingRequiredConfigurationField
+from configuration.config import Configuration, ValueForConfigFieldNotAllowed, MissingRequiredConfigurationField, \
+    ConfigFieldNotExist
 
 
 class TestConfiguration(TestCase):
@@ -101,3 +102,14 @@ class TestConfiguration(TestCase):
 
     def test_exposer_log_level_default(self):
         self.assertEqual(Configuration.get_log_level(), "ERROR")
+
+    def test_print_variable_non_restricted_exposer_type(self):
+        self.assertEqual(Configuration.print_variable("EXPOSER_TYPE"), "html")
+
+    @mock.patch.dict(os.environ, {"S3_SECRET_KEY": "password"}, clear=True)
+    def test_print_variable_restricted(self):
+        self.assertEqual(Configuration.print_variable("S3_SECRET_KEY"), "********")
+
+    def test_print_variable_that_not_exist(self):
+        with self.assertRaises(ConfigFieldNotExist):
+            Configuration.print_variable("foo")
