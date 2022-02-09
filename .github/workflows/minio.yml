@@ -11,16 +11,10 @@ jobs:
         with:
           python-version: "3.10"
       - name: Build the image
-        run: docker build --tag s3-bucket-exposer .
+        run: docker build --tag "s3-bucket-exposer:candidate" .
       - name: Install tests-requirements
         run: pip3 install -r tests-requirements.txt
       - name: Start minio container
         run: tests/start_minio.sh
-      - name: Start s3-bucket-exposer container
-        run: tests/start_app.sh html
-      - uses: webiny/action-post-run@2.0.1
-        id: post-run-command
-        with:
-          run: docker logs s3-bucket-exposer
       - name: Run test suite
         run: python3 tests/main.py
