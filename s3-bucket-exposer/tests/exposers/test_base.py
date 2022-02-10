@@ -12,7 +12,7 @@ class TestBaseExposer(TestCase):
         self.assertEqual(return_value, "")
 
     def test_expose_list_of_objects(self):
-        return_value = self.foo.expose_list_of_objects(["foo", "bar"])
+        return_value = self.foo.expose_list_of_objects("foo-bucket", ["foo", "bar"])
         self.assertEqual(return_value, "")
 
     @mock.patch('exposers.base.flask_redirect')

@@ -24,3 +24,8 @@ class TestHTMLExposer(TestCase):
                                       bucket='bar',
                                       objects=[s3_object],
                                       product_version=f's3-bucket-exposer {APP_VERSION}')
+
+    @mock.patch('exposers.html.abort')
+    def test_expose_list_of_objects_None(self, mocked_fun):
+        self.foo.expose_list_of_objects("bar", None)
+        mocked_fun.assert_called_with(404)
