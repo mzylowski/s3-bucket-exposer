@@ -1,8 +1,8 @@
-from flask import Flask
+from flask import Flask, render_template
 
 import helpers
 from exposers.base import BaseExposer
-from configuration.consts import APP_NAME
+from configuration.consts import APP_NAME, APP_FULL_NAME
 
 application = Flask(APP_NAME)
 provider, exposer = helpers.initialize()
@@ -24,6 +24,11 @@ def file_list(bucket_name):
 @application.route("/download/<bucket_name>/<path:rest>")
 def download_file(bucket_name, rest):
     return exposer.redirect(provider.generate_download_url(bucket_name, rest))
+
+
+@application.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html', title=error, product_version=APP_FULL_NAME), 404
 
 
 if __name__ == "__main__":
