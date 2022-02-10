@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, abort
 
 from configuration import consts
 from exposers.base import BaseExposer
@@ -12,7 +12,10 @@ class HTMLExposer(BaseExposer):
                                product_version=consts.APP_FULL_NAME)
 
     def expose_list_of_objects(self, bucket, objects: [S3Object]):
-        return render_template("object_list.html",
-                               bucket=bucket,
-                               objects=objects,
-                               product_version=consts.APP_FULL_NAME)
+        if objects is None:
+            abort(404)
+        else:
+            return render_template("object_list.html",
+                                   bucket=bucket,
+                                   objects=objects,
+                                   product_version=consts.APP_FULL_NAME)

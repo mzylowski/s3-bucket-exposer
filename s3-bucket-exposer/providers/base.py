@@ -23,7 +23,11 @@ class BaseProvider(object):
         logging.info(f"Getting list of available objects in {bucket_name} bucket.")
         if not self.is_bucket_allowed(bucket_name):
             return None
-        response = self.client.list_objects(Bucket=bucket_name).get("Contents", [])
+        try:
+            response = self.client.list_objects(Bucket=bucket_name).get("Contents", [])
+        except self.client.exceptions.NoSuchBucket:
+            return None
+
         return [S3Object(name=obj['Key'], date=obj['LastModified'], size=obj['Size'])
                 for obj in response if float(obj['Size']) != 0]
 
