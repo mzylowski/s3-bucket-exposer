@@ -1,4 +1,4 @@
-name: Unittests
+name: S3BE Unittests
 on: [push, pull_request]
 
 jobs:

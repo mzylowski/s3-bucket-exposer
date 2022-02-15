@@ -1,4 +1,5 @@
 import requests
+import unittest
 
 from managers.container import Container
 
@@ -11,6 +12,8 @@ def sanity_check():
 
 
 if __name__ == "__main__":
-    sanity_check()
     print("Starting tests scenarios...")
-    # TODO
+    loader = unittest.TestLoader()
+    tests = loader.discover('scenarios')
+    runner = unittest.TextTestRunner(verbosity=3)
+    result = runner.run(tests)
