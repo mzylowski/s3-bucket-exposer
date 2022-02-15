@@ -28,7 +28,8 @@ def download_file(bucket_name, rest):
 
 @application.errorhandler(404)
 def page_not_found(error):
-    return render_template('404.html', title=error, product_version=APP_FULL_NAME), 404
+    return "" if type(exposer) == BaseExposer else render_template('404.html', title=error,
+                                                                   product_version=APP_FULL_NAME), 404
 
 
 if __name__ == "__main__":
