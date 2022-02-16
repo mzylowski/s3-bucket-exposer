@@ -9,6 +9,7 @@ class Container(object):
         self.client = docker.APIClient(base_url='unix://var/run/docker.sock')
         self.container = None
         self.container_ip = None
+        self.container_logs = []
 
         self._minio_endpoint = None
         self._set_s3_provider(provider)
@@ -42,6 +43,22 @@ class Container(object):
             self.client.stop(self.container)
             self.client.remove_container(self.container)
             self.container = None
+
+    def _get_container_logs(self):
+        logs = self.client.logs(self.container).decode()
+        self.container_logs = logs.split('\n')
+
+    def print_container_logs(self):
+        self._get_container_logs()
+        for line in self.container_logs:
+            print(line)
+
+    def log_contains(self, text):
+        self._get_container_logs()
+        for line in self.container_logs:
+            if text in line:
+                return True
+        return False
 
     def _build_env_dict(self):
         envs = {
