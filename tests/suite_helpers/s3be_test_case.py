@@ -11,6 +11,10 @@ class S3BucketExposerTestCase(TestCase):
         self.container_id_for_logs.append(self.docker)
         return self.original_failureException
 
+    def tearDown(self):
+        if self.docker.log_contains("Exception"):
+            self.fail("Exception occurred during test.")
+
     @classmethod
     def setUpClass(cls):
         cls.container_id_for_logs = []
@@ -20,6 +24,6 @@ class S3BucketExposerTestCase(TestCase):
     def tearDownClass(cls):
         for container in set(cls.container_id_for_logs):
             print(f">>>>>>>>>>>> Docker logs for {container.container} ({container.container_ip})")
-            # (TODO) print logs from docker container
+            cls.docker.print_container_logs()
             print("<<<<<<<<<<<<")
         cls.docker.stop_delete_container()
