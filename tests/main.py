@@ -17,3 +17,4 @@ if __name__ == "__main__":
     tests = loader.discover('scenarios')
     runner = unittest.TextTestRunner(verbosity=3)
     result = runner.run(tests)
+    print(":)") if result.wasSuccessful() else print(":(")

@@ -1,21 +1,20 @@
 import requests
-from unittest import TestCase
 
-from test_helpers import initialize_container, url
+from suite_helpers.s3be_test_case import S3BucketExposerTestCase
+from suite_helpers.functions import url
+
+has_failures = []
 
 
-class TestEmptyExposer(TestCase):
+class TestEmptyExposer(S3BucketExposerTestCase):
     @classmethod
-    def setUpClass(cls):
-        cls.docker = initialize_container()
+    def setUpClass(cls) -> None:
+        super().setUpClass()
         cls.docker.set_exposer_type("empty")
         cls.docker.start_container()
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.docker.stop_delete_container()
-
     def test_list_of_buckets(self):
+        self.defaultTestResult()
         r = requests.get(f'{url(self.docker)}/')
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.text, "")
@@ -34,3 +33,5 @@ class TestEmptyExposer(TestCase):
         r = requests.get(f'{url(self.docker)}/not_exist')
         self.assertEqual(r.status_code, 404)
         self.assertEqual(r.text, "")
+
+    # TODO (tests for objects download)

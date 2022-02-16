@@ -2,7 +2,7 @@ name: S3BE functional tests
 on: [push, pull_request]
 
 jobs:
-  test_minio:
+  test_container:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
