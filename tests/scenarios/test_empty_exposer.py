@@ -1,9 +1,8 @@
+import filecmp
 import requests
 
 from suite_helpers.s3be_test_case import S3BucketExposerTestCase
 from suite_helpers.functions import url
-
-has_failures = []
 
 
 class TestEmptyExposer(S3BucketExposerTestCase):
@@ -14,7 +13,6 @@ class TestEmptyExposer(S3BucketExposerTestCase):
         cls.docker.start_container()
 
     def test_list_of_buckets(self):
-        self.defaultTestResult()
         r = requests.get(f'{url(self.docker)}/')
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.text, "")
@@ -34,4 +32,23 @@ class TestEmptyExposer(S3BucketExposerTestCase):
         self.assertEqual(r.status_code, 404)
         self.assertEqual(r.text, "")
 
-    # TODO (tests for objects download)
+    def test_download_existing_binary_object(self):
+        r = requests.get(f'{url(self.docker)}/download/cats/cat1.jpg')
+        self.assertEqual(r.status_code, 200)
+        with open("/tmp/tested_cat.jpg", 'wb') as f:
+            f.write(r.content)
+        self.assertTrue(  # consistency check
+            open("tests/assets/cat1.jpg", "rb").read() == open("/tmp/tested_cat.jpg", "rb").read())
+
+    def test_download_existing_text_object(self):
+        r = requests.get(f'{url(self.docker)}/download/cats/nested/nested.txt')
+        self.assertEqual(r.status_code, 200)
+        with open("/tmp/tested_text.txt", 'w') as f:
+            f.write(r.content.decode())
+        self.assertTrue(  # consistency check
+            filecmp.cmp("tests/assets/nested.txt", "/tmp/tested_text.txt", shallow=False))
+
+    def test_download_not_existing_object(self):
+        r = requests.get(f'{url(self.docker)}/download/nope/error.txt')
+        self.assertEqual(r.status_code, 404)
+        self.assertEqual(r.text, "")
