@@ -22,12 +22,12 @@ class AWSProvider(BaseProvider):
                                     signature_version='s3v4'))
 
     def generate_download_url(self, bucket, key):
-        if self.is_bucket_allowed(bucket):
+        if self.is_bucket_allowed(bucket) and self._object_exists(bucket, key):
             logging.info(f"Generating download URL for {bucket}/{key}")
             bucket_location = self.client.get_bucket_location(Bucket=bucket)
             regionalized_client = self.get_client(bucket_location["LocationConstraint"])
             return regionalized_client.generate_presigned_url('get_object',
                                                               Params={'Bucket': bucket, 'Key': key},
                                                               ExpiresIn=15)
-        logging.info(f"Request for download URL for object in not existing bucket ({bucket}) is aborted.")
+        logging.info(f"Object requested for download is not existing ({bucket}/{key}).")
         return None

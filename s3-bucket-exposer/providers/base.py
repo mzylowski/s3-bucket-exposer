@@ -1,4 +1,5 @@
 import logging
+from botocore.exceptions import ClientError
 
 from configuration.config import consts, Configuration as Config
 from objects.s3_object import S3Object
@@ -32,13 +33,19 @@ class BaseProvider(object):
                 for obj in response if float(obj['Size']) != 0]
 
     def generate_download_url(self, bucket, key):
-        if self.is_bucket_allowed(bucket):
+        if self.is_bucket_allowed(bucket) and self._object_exists(bucket, key):
             logging.info(f"Generating download URL for {bucket}/{key}")
             return self.client.generate_presigned_url('get_object',
                                                       Params={'Bucket': bucket, 'Key': key},
                                                       ExpiresIn=15)
-        logging.info(f"Request for download URL for object in not existing bucket ({bucket}) is aborted.")
+        logging.info(f"Object requested for download is not existing ({bucket}/{key}).")
         return None
 
     def _intersect_allowed_buckets(self, s3_buckets):
         return s3_buckets if self.all_buckets_allowed() else [b for b in s3_buckets if self.is_bucket_allowed(b)]
+
+    def _object_exists(self, bucket, key):
+        try:
+            return self.client.head_object(Bucket=bucket, Key=key)
+        except ClientError:
+            return False
