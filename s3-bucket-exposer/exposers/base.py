@@ -1,4 +1,4 @@
-from flask import redirect as flask_redirect
+from flask import abort, redirect as flask_redirect
 
 from objects.s3_object import S3Object
 
@@ -12,4 +12,6 @@ class BaseExposer(object):
         return ""
 
     def redirect(self, url):
-        return flask_redirect(url)
+        if url:
+            return flask_redirect(url)
+        return abort(404)
