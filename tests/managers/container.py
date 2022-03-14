@@ -1,4 +1,5 @@
 import docker
+import requests
 import time
 
 from managers import consts
@@ -35,8 +36,21 @@ class Container(object):
         self.client.start(self.container)
         inspect = self.client.inspect_container(self.container)
         self.container_ip = inspect['NetworkSettings']['Networks']['bridge']['IPAddress']
+        self._wait_for_container_to_respond()
         print(f"Container started with IP {self.container_ip} (id: {self.container})")
-        time.sleep(2)  # (todo: remove sanity check from main.py and do while with timeout checking for exit code 200
+
+    def _wait_for_container_to_respond(self):
+        start_tries = 5
+        while start_tries:
+            try:
+                r = requests.get(f'http://{self.container_ip}')
+                if r.status_code == 200:
+                    return True
+            except requests.exceptions.ConnectionError:
+                pass
+            start_tries -= 1
+            time.sleep(2)
+        raise Exception("Container didn't start after 5 checks...")
 
     def stop_delete_container(self):
         if self.container:
