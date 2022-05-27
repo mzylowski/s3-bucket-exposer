@@ -14,7 +14,7 @@ docker run -d -n s3be
   -e S3_SECRET_KEY="Put SECRET_KEY_HERE"
   -e MINIO_ENDPOINT="Put HTTP or HTTPS address to your minio server (by default it is 9000 port)."
   -e EXPOSER_ALLOWED_BUCKETS="Put here names of buckets you want to expose separated by semicoln"
-  mzylowski/s3-bucket-exposer:1.0
+  mzylowski/s3-bucket-exposer:beta
 ```
 So for example:
 ```
@@ -24,7 +24,7 @@ docker run -d --name=s3be \
   -e S3_SECRET_KEY="password" \
   -e MINIO_ENDPOINT="https://some.domain:9000" \
   -e EXPOSER_ALLOWED_BUCKETS="downloads,sheets" \
-  mzylowski/s3-bucket-exposer:1.0
+  mzylowski/s3-bucket-exposer:beta
 ```
 
 #### Configuring S3 bucket on AWS and running S3BE with it
@@ -52,5 +52,5 @@ docker run -d --name=s3be \
   -e S3_ACCESS_KEY="admin" \
   -e S3_SECRET_KEY="password" \
   -e EXPOSER_ALLOWED_BUCKETS="downloads,sheets" \
-  mzylowski/s3-bucket-exposer:1.0
+  mzylowski/s3-bucket-exposer:beta
 ```

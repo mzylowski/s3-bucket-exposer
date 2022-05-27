@@ -35,7 +35,7 @@ spec:
           value: "html"
         - name: EXPOSER_LOG_LEVEL
           value: "INFO"
-        image: mzylowski/s3-bucket-exposer:1.0
+        image: mzylowski/s3-bucket-exposer:beta
         ports:
         - containerPort: 80
           name: s3be
