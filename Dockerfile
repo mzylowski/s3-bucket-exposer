@@ -19,14 +19,14 @@ RUN apt clean \
     && apt clean
 
 COPY s3-bucket-exposer /srv/s3-bucket-exposer
-COPY docker_scripts/uwsgi.ini /srv/s3-bucket-exposer
-COPY docker_scripts/run.sh /srv/s3-bucket-exposer
+COPY container/uwsgi.ini /srv/s3-bucket-exposer
+COPY container/run.sh /srv/s3-bucket-exposer
 WORKDIR /srv/s3-bucket-exposer
 
 ARG FLASK_ENV="production"
 ENV PATH="/opt/venv/bin:$PATH"
 ENV PYTHONUNBUFFERED="true"
 
-COPY docker_scripts/nginx.conf /etc/nginx
+COPY container/nginx.conf /etc/nginx
 RUN chmod +x ./run.sh
 CMD ["./run.sh"]
