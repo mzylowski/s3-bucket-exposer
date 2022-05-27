@@ -1,4 +1,6 @@
+[![Lint](https://github.com/mzylowski/s3-bucket-exposer/actions/workflows/lint.yml/badge.svg)](https://github.com/mzylowski/s3-bucket-exposer/actions/workflows/lint.yml)
 [![S3BE tests](https://github.com/mzylowski/s3-bucket-exposer/actions/workflows/functional.yml/badge.svg)](https://github.com/mzylowski/s3-bucket-exposer/actions/workflows/functional.yml)
+[![S3BE Unittests](https://github.com/mzylowski/s3-bucket-exposer/actions/workflows/unittests.yml/badge.svg)](https://github.com/mzylowski/s3-bucket-exposer/actions/workflows/unittests.yml)
 
 ## S3 Bucket Exposer (S3BE)
 
@@ -33,9 +35,9 @@ S3BE allows You to choose one exposer from given list:
 
 #### Examples
 Check our examples related with running S3BE:
-* Docker
-* Kubernetes
-* AWS S3 example (docker)
+* [Docker](docs/examples/docker.md)
+* [Docker with AWS S3 backend](docs/examples/docker.md#configuring-s3-bucket-on-aws-and-running-s3be-with-it)
+* [Kubernetes](docs/examples/k8s.md)
 
 #### Contribution
 Issues or Contributions and Pull-Requests are welcome!
