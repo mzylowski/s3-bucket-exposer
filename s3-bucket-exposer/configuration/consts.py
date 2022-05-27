@@ -18,7 +18,7 @@ SECRET = "********"  # 8-stars password masking
 
 # app
 APP_NAME = "s3-bucket-exposer"
-APP_VERSION = "beta"
+APP_VERSION = "Beta"
 APP_FULL_NAME = f"{APP_NAME} {APP_VERSION}"
 
 # variables
